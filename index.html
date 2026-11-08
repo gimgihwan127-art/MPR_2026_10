@@ -61,6 +61,15 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 #intro.playing #skip{opacity:1}
 #skip:hover{color:#fff;border-color:#fff}
 
+/* fullscreen button */
+#fsBtn{position:fixed;left:20px;bottom:20px;z-index:120;display:flex;align-items:center;gap:8px;height:42px;padding:0 14px 0 12px;border-radius:99px;border:1px solid rgba(255,255,255,.22);background:rgba(10,12,16,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:rgba(255,255,255,.75);font-size:12px;transition:color .2s,border-color .2s,background .2s}
+#fsBtn:hover{color:#fff;border-color:#fff;background:rgba(10,12,16,.8)}
+#fsBtn svg{width:18px;height:18px}
+#fsBtn .ic-off{display:none}
+#fsBtn.on .ic-on{display:none}
+#fsBtn.on .ic-off{display:block}
+#fsBtn.hidden{display:none}
+
 /* ───────── NAV ───────── */
 .nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:18px var(--gutter);transition:background .4s,backdrop-filter .4s;opacity:0;transform:translateY(-12px)}
 body.ready .nav{opacity:1;transform:none;transition:opacity .8s .2s,transform .8s .2s,background .4s}
@@ -266,6 +275,9 @@ section.block{padding:clamp(80px,12vh,140px) var(--gutter) 0}
 @keyframes flicker{0%,100%{opacity:.75;transform:scale(1)}50%{opacity:1;transform:scale(1.08)}}
 .mkt-date{position:relative;font-family:var(--display);font-weight:300;font-size:clamp(70px,10vw,170px);line-height:.85;letter-spacing:-.06em}
 .mkt-date em{font-style:normal;color:var(--fire)}
+.leave{position:relative;display:inline-block;margin-bottom:18px;transform:rotate(-3deg);cursor:zoom-in;transition:transform .4s cubic-bezier(.2,.7,.2,1)}
+.leave:hover{transform:rotate(0) scale(1.06)}
+.leave img{width:150px;height:auto;border-radius:10px;box-shadow:0 12px 30px rgba(0,0,0,.45),0 0 0 1px rgba(255,90,31,.35)}
 .mkt-type h3{position:relative;font-size:clamp(22px,2.2vw,34px);font-weight:600;letter-spacing:-.04em;line-height:1.25}
 .mkt-type p{position:relative;font-size:14px;color:var(--muted);margin-top:10px}
 .mkt-msgs{position:relative;border-radius:var(--radius);border:1px solid var(--line);background:radial-gradient(120% 80% at 50% 0%,#1b2a4a 0%,#0b0d11 70%);padding:clamp(60px,6vw,80px) clamp(16px,2.4vw,36px) clamp(20px,2.4vw,36px);display:flex;align-items:center;justify-content:center}
@@ -390,6 +402,12 @@ section.block{padding:clamp(80px,12vh,140px) var(--gutter) 0}
   </div>
   <button id="skip">SKIP</button>
 </div>
+
+<button id="fsBtn" aria-label="전체화면" title="전체화면">
+  <svg class="ic-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+  <svg class="ic-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg>
+  <span>전체화면</span>
+</button>
 
 <!-- ═════════ NAV ═════════ -->
 <nav class="nav" id="nav">
@@ -573,7 +591,10 @@ section.block{padding:clamp(80px,12vh,140px) var(--gutter) 0}
     <div class="mkt-type reveal">
       <span class="pill fire" style="align-self:flex-start;position:relative">🔥 Burning Friday</span>
       <div class="mkt-date">10.<em>23</em><br>FRI</div>
-      <div><h3>불타는 10월 23일의 금요일</h3><p>FDC 홍보 마무리 · 카카오톡 채널 메시지 발송</p></div>
+      <div>
+        <figure class="leave"><img src="images/mkt-leave.png" alt="오후 11:27 퇴근하겠습니다 메시지" data-zoom="leave"></figure>
+        <h3>불타는 10월 23일의 금요일</h3><p>FDC 홍보 마무리 · 카카오톡 채널 메시지 발송</p>
+      </div>
     </div>
     <div class="mkt-msgs reveal d1">
       <div class="top"><span class="pill accent">KakaoTalk</span><span class="pill">채널 메시지</span></div>
@@ -795,6 +816,20 @@ section.block{padding:clamp(80px,12vh,140px) var(--gutter) 0}
     try { v1.currentTime = v1.duration - 0.05; } catch (e) {}
     logoSequence();
   });
+
+  /* ── 전체화면 버튼 ── */
+  const fsBtn = document.getElementById('fsBtn'), root = document.documentElement;
+  const fsEl = () => document.fullscreenElement || document.webkitFullscreenElement;
+  if (!(root.requestFullscreen || root.webkitRequestFullscreen)) fsBtn.classList.add('hidden');
+  fsBtn.addEventListener('click', e => {
+    e.stopPropagation();
+    const p = fsEl() ? (document.exitFullscreen || document.webkitExitFullscreen).call(document)
+                     : (root.requestFullscreen || root.webkitRequestFullscreen).call(root);
+    if (p && p.catch) p.catch(() => {});
+  });
+  const fsSync = () => { const on = !!fsEl(); fsBtn.classList.toggle('on', on); fsBtn.querySelector('span').textContent = on ? '전체화면 종료' : '전체화면'; };
+  document.addEventListener('fullscreenchange', fsSync);
+  document.addEventListener('webkitfullscreenchange', fsSync);
 
   /* ── 네비 배경 ── */
   const nav = document.getElementById('nav');
