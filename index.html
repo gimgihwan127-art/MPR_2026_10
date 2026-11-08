@@ -111,7 +111,8 @@ body.ready .hero-meta{opacity:1;transform:none}
 .hero-bottom{display:grid;grid-template-columns:minmax(260px,360px) 1fr;gap:24px;align-items:end;margin-top:clamp(28px,6vh,64px);opacity:0;transform:translateY(20px);transition:all 1.1s .7s}
 body.ready .hero-bottom{opacity:1;transform:none}
 .glass{background:rgba(20,22,26,.42);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-radius:16px}
-.hero-card{display:grid;grid-template-columns:120px 1fr;overflow:hidden}
+.hero-card{display:block;overflow:hidden}
+.hero-card .txt{gap:14px;padding:20px 22px}
 .hero-card .slot{aspect-ratio:1;border-radius:0}
 .hero-card .slot::after{inset:8px;border-radius:10px;font-size:9px}
 .hero-card .txt{padding:16px;display:flex;flex-direction:column;justify-content:space-between;font-size:12px;line-height:1.5;color:rgba(255,255,255,.85)}
@@ -416,18 +417,12 @@ section.block{padding:clamp(80px,12vh,140px) var(--gutter) 0}
     </div>
     <div class="hero-bottom">
       <div class="hero-card glass">
-        <div class="slot" data-src="images/hero-card" data-label="IMAGE&#10;hero-card"></div>
         <div class="txt"><b>10월</b><span>기획 · 디자인 · 영상<br>마케팅 · 행사 · 기타</span></div>
       </div>
       <div class="hero-right">
         <div class="btns">
           <a class="btn dark" href="#overview">한 달 돌아보기<i>→</i></a>
           <a class="btn light" href="#plan">업무 보기</a>
-        </div>
-        <div class="thumbs">
-          <div class="slot" data-src="images/hero-1" data-label="IMAGE&#10;hero-1"></div>
-          <div class="slot" data-src="images/hero-2" data-label="IMAGE&#10;hero-2"></div>
-          <div class="slot" data-src="images/hero-3" data-label="IMAGE&#10;hero-3"></div>
         </div>
       </div>
     </div>
